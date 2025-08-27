@@ -1,9 +1,11 @@
 {
-  "@@locale": "ru",
-  "appTitle": "Спорт Психо Приложение",
-  "profile": "Профиль",
-  "catalog": "Каталог / Купить доступ",
-  "myGames": "Мои игры / Консультации",
-  "settings": "Настройки",
-  "enableDarkMode": "Включить тёмную тему"
+  "profile": "Profile",
+  "catalog": "Catalog",
+  "myGames": "My Games",
+  "settings": "Settings",
+  "enableDarkMode": "Enable Dark Mode",
+  "login": "Login",
+  "registration": "Registration",
+  "appTitle": "Sport Psy App",
+  "helloWorld": "Hello World"
 }
