@@ -1,0 +1,11 @@
+{
+  "profile": "Profile",
+  "catalog": "Catalog",
+  "myGames": "My Games",
+  "settings": "Settings",
+  "enableDarkMode": "Enable Dark Mode",
+  "login": "Login",
+  "registration": "Registration",
+  "appTitle": "Sport Psy App",
+  "helloWorld": "Hello World"
+}
