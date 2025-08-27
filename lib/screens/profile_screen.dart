@@ -1,95 +1,185 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
-import 'payment_screen.dart';
+import 'package:image_picker/image_picker.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  final _formKey = GlobalKey<FormState>();
+
+  final _nameController = TextEditingController(text: "John Doe");
+  final _emailController = TextEditingController(text: "john@example.com");
+  final _phoneController = TextEditingController(text: "+7 777 123 45 67");
+  final _locationController = TextEditingController(text: "Astana, Kazakhstan");
+  final _aboutController =
+  TextEditingController(text: "PhD student, Software Engineer");
+
+  File? _avatarImage;
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+
+    if (picked != null) {
+      setState(() {
+        _avatarImage = File(picked.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: const Text("Profile"),
         backgroundColor: Colors.blueAccent,
+        elevation: 2,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Аватар
-            CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.blueAccent,
-              child: const Icon(Icons.person, size: 50, color: Colors.white),
-            ),
-            const SizedBox(height: 16),
-            // Имя и Email
-            const Text(
-              'John Doe',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'john.doe@example.com',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Role: Athlete',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            const SizedBox(height: 24),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              // Аватар
+              Stack(
+                children: [
+                  CircleAvatar(
+                    radius: 60,
+                    backgroundImage: _avatarImage != null
+                        ? FileImage(_avatarImage!)
+                        : null,
+                    backgroundColor: Colors.blueAccent,
+                    child: _avatarImage == null
+                        ? const Icon(Icons.person,
+                        size: 60, color: Colors.white)
+                        : null,
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: InkWell(
+                      onTap: _pickImage,
+                      child: Container(
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        padding: const EdgeInsets.all(6),
+                        child: const Icon(Icons.camera_alt,
+                            color: Colors.blueAccent),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
 
-            // История оплат / доступов
-            Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-              elevation: 4,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text('Purchase History', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 8),
-                    Text('• Consultation Game 1 - \$10'),
-                    Text('• Consultation Game 2 - \$15'),
-                  ],
+              const SizedBox(height: 24),
+
+              // Поля для редактирования
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(
+                  labelText: "Name",
+                  prefixIcon: Icon(Icons.person),
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) =>
+                value!.isEmpty ? "Please enter your name" : null,
+              ),
+              const SizedBox(height: 12),
+
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: "Email",
+                  prefixIcon: Icon(Icons.email),
+                  border: OutlineInputBorder(),
+                ),
+                validator: (value) =>
+                !value!.contains("@") ? "Enter valid email" : null,
+              ),
+              const SizedBox(height: 12),
+
+              TextFormField(
+                controller: _phoneController,
+                decoration: const InputDecoration(
+                  labelText: "Phone",
+                  prefixIcon: Icon(Icons.phone),
+                  border: OutlineInputBorder(),
                 ),
               ),
-            ),
-            const SizedBox(height: 24),
+              const SizedBox(height: 12),
 
-            // Привязка карты
-            ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const PaymentScreen()),
-                );
-              },
-              icon: const Icon(Icons.credit_card),
-              label: const Text('Add / Manage Payment Method'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueAccent,
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              TextFormField(
+                controller: _locationController,
+                decoration: const InputDecoration(
+                  labelText: "Location",
+                  prefixIcon: Icon(Icons.location_on),
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 12),
 
-            // Настройки профиля
-            ElevatedButton.icon(
-              onPressed: () {
-                // Здесь можно открыть экран настроек
-              },
-              icon: const Icon(Icons.settings),
-              label: const Text('Settings'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey[400],
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              TextFormField(
+                controller: _aboutController,
+                maxLines: 3,
+                decoration: const InputDecoration(
+                  labelText: "About",
+                  prefixIcon: Icon(Icons.info),
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 24),
+
+              // Кнопка Save
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blueAccent,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Profile updated ✅")),
+                      );
+                    }
+                  },
+                  icon: const Icon(Icons.save),
+                  label: const Text("Save"),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              // Кнопка Logout
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                  ),
+                  onPressed: () {
+                    Navigator.pushReplacementNamed(context, '/login');
+                  },
+                  icon: const Icon(Icons.logout, color: Colors.white),
+                  label: const Text(
+                    "Logout",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
