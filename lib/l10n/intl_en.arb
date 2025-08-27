@@ -1,9 +1,11 @@
 {
-  "@@locale": "en",
-  "appTitle": "Sport Psych App",
   "profile": "Profile",
-  "catalog": "Catalog / Buy Access",
-  "myGames": "My Games / Consultations",
+  "catalog": "Catalog",
+  "myGames": "My Games",
   "settings": "Settings",
-  "enableDarkMode": "Enable Dark Mode"
+  "enableDarkMode": "Enable Dark Mode",
+  "login": "Login",
+  "registration": "Registration",
+  "appTitle": "Sport Psy App",
+  "helloWorld": "Hello World"
 }
